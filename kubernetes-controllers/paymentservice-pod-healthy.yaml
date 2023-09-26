@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: paymentservice
+  name: paymentservice
+spec:
+  containers:
+  - image: akha/paymentservice-k8s:0.0.1
+    name: paymentservice
+    resources: {}
+    env:
+    - name: PORT
+      value: "50051"
+    - name: DISABLE_PROFILER
+      value: "1"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}

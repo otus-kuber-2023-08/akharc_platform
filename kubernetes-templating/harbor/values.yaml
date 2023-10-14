@@ -1,0 +1,29 @@
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: harbor.158.160.58.88.nip.io
+  ingress:
+    hosts:
+      core: harbor.158.160.58.88.nip.io
+    controller: nginx
+    annotations:
+      # note different ingress controllers may require a different ssl-redirect annotation
+      # for Envoy, use ingress.kubernetes.io/force-ssl-redirect: "true" and remove the nginx lines below
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/ingress.allow-http: "true"
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-staging
+      cert-manager.io/acme-challenge-type: http01
+    harbor:
+      # harbor ingress-specific annotations
+      annotations: {}
+      # harbor ingress-specific labels
+      labels: {}
+
+externalURL: https://harbor.158.160.58.88.nip.io
+
+notary:
+  enabled: false

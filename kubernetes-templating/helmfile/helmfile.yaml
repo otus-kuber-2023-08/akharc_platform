@@ -1,0 +1,33 @@
+repositories:
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
+- name: jetstack
+  url: https://charts.jetstack.io
+- name: chartmuseum
+  url: https://chartmuseum.github.io/charts
+- name: harbor
+  url: https://helm.goharbor.io
+
+releases:
+- name: nginx-ingress
+  namespace: nginx-ingress
+  chart: ingress-nginx
+
+- name: cert-manager
+  namespace: cert-manager
+  chart: jetstack/cert-manager
+  version: v1.12.0
+
+- name: chartmuseum
+  namespace: chartmuseum
+  chart: chartmuseum/chartmuseum
+  version: 3.10.0
+  values:
+  - "../chartmuseum/values.yaml"
+
+- name: harbor
+  namespace: harbor
+  chart: harbor/harbor
+  version: 1.12.2
+  values:
+  - "../harbor/values.yaml"

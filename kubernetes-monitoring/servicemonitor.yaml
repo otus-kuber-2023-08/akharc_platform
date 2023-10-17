@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-mon
+  labels:
+    team: frontend
+spec:
+  selector:
+    matchLabels:
+      app: nginx-exporter
+  endpoints:
+  - port: mon-n
+#  ports:
+#    - name: http
+#      protocol: TCP
+#      port: 80
+#      targetPort: 9113

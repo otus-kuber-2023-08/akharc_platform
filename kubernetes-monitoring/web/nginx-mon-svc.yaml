@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-mon
+spec:
+  selector:
+    app: nginx-mon
+  type: ClusterIP
+  ports:
+    - name: nginx-mon
+      protocol: TCP
+      port: 80
+      targetPort: 8080

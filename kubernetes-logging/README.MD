@@ -1,15 +1,12 @@
-/--------------------------------------------------------------
-# akharc_platform
-akharc Platform repository
 # Выполнено ДЗ №9
 
- - [ ] Основное ДЗ
+ - [x] Основное ДЗ
  - [ ] Задание со * 
 
 ## В процессе сделано:
 - Развернут EFK-стек, настроены сборы метрик k8s и nginx
 - развернут prometheus и grafana, настроен мониторинг EFK и nginx-ingress
-- 
+
 
 ## Как проверить работоспособность:
 ### Prereq
@@ -117,9 +114,11 @@ kubectl get pods --namespace=observability -l release=kibana -w
 
 ```
 
+
+
+ 
 пароль:
 kubectl get secrets --namespace=observability elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
-
 
 #### FluentBit
 ```shell
@@ -132,8 +131,10 @@ curl http://127.0.0.1:2020
 ```
 Fluent-bit сконфигурирован на прием логов из кластера Kubernetes и на отправку их в Elasticsearch. Логи микросервисов Hipster-shop можно посмотреть в Kibana:
 Описанная в методичке проблема с дубликатами полей не воспроизводится.
+![img 1.png](./kubernetes-logging/img/elk.png)  
 
-
+![img 2.png](./kubernetes-logging/img/indicies.png)  
+![img 3.png](./kubernetes-logging/img/data-view.png) 
 ### Мониторинг ElasticSearch
 #### Устанавливаем Kube Prometheus Stack
 ```shell
@@ -155,11 +156,11 @@ prometheus-prometheus-node-exporter-dxv6c              1/1     Running   0      
 [akha@192 akharc_platform]$ helm upgrade --install elasticsearch-exporter prometheus-community/prometheus-elasticsearch-exporter -n observability -f kubernetes-logging/prometheus-elasticsearch-exporter.values.yaml --atomic
 ```
 Логинимся в Графану http://grafana.158.160.23.111.nip.io/ с паролем из values и импортируем дэшборд https://grafana.com/grafana/dashboards/4358-elasticsearch/https://grafana.com/grafana/dashboards/4358-elasticsearch/
-рисунок 1
-рисунок 2
+![img 4.png](./kubernetes-logging/img/grafana-1.png)  
+
+![img 5.png](./kubernetes-logging/img/grafana-2.png)  
 
 Остановим одну ноду:
-```shell
 [akha@192 kubernetes-logging]$ kubectl get nodes
 NAME                        STATUS   ROLES    AGE   VERSION
 cl1kfkj7hfg1bic8p105-afyv   Ready    <none>   21m   v1.23.14
@@ -169,27 +170,22 @@ cl1vssnst3jl49i1s2p7-yqyd   Ready    <none>   20d   v1.23.14
 
 kubectl drain cl1kfkj7hfg1bic8p105-ajav --ignore-daemonsets --delete-emptydir-data
 node/cl1kfkj7hfg1bic8p105-ajav drained
-```
-
-рисунок 3
+![img 6.png](./kubernetes-logging/img/grafana-3.png)  
 
 Остановка второй ноды:
-```shell
 kubectl drain cl1kfkj7hfg1bic8p105-ixuh --ignore-daemonsets --delete-emptydir-data
-```
 PDB не дает это сделать:
-```shell
 error when evicting pods/"elasticsearch-master-0" -n "observability" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-```
 
 После удаления второго пода руками кластер ES сломался
- - рисунок 4
+![img 7.png](./kubernetes-logging/img/grafana-4.png) 
 Восстанавливаем работу:
 kubectl uncordon cl1kfkj7hfg1bic8p105-ajav cl1kfkj7hfg1bic8p105-ixuh
 
 ### EFK | nginx ingress
 
-Для получения логов nginx нужно джобавить соответствующие разделы в fluent-bit.values
+Для получения логов nginx нужно добавить соответствующие разделы в fluent-bit.values
+```shell
     [INPUT]
         Name tail
         Tag nginx.*
@@ -215,27 +211,30 @@ kubectl uncordon cl1kfkj7hfg1bic8p105-ajav cl1kfkj7hfg1bic8p105-ixuh
         Regex ^(?<host>[^ ]*) - \[(?<real_ip>[^ ]*)\] - (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*) "(?<referer>[^\"]*)" "(?<agent>[^\"]*)" (?<request_length>[^ ]*) (?<request_time>[^ ]*) \[(?<proxy_upstream_name>[^ ]*)\] (?<upstream_addr>[^ ]*) (?<upstream_response_length>[^ ]*) (?<upstream_response_time>[^ ]*) (?<upstream_status>[^ ]*) (?<last>[^$]*)
         Time_Key time
         Time_Format %d/%b/%Y:%H:%M:%S %z
-
+```
 ### EFK | LOKI
-
+```shel
 helm repo add grafana https://grafana.github.io/helm-charts && \
 helm repo update && \
 helm upgrade --install loki grafana/loki-stack --namespace=observability -f kubernetes-logging/loki.values.yaml --atomic && \
 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace=observability -f kubernetes-logging/prometheus-operator.values.yaml --atomic
-
-loki.png
+```
+![img 8.png](./kubernetes-logging/img/loki.png)  
 
 Делаем визуализацию для  nginx:
+```shel
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --namespace=nginx-ingress -f nginx-values.yaml \
 --set controller.metrics.enabled=true \
 --set controller.metrics.serviceMonitor.enabled=true \
 --set controller.metrics.serviceMonitor.additionalLabels.release="kube-prometheus-stack" \
 --version=4.7.0
-
+```
 Далее добавляем внутри графаны DataSource для Loki, задаем значения переменных и делаем дашборд для ingress-nginx
 
-grafana-ingress nginx.png
+![img 9.png](./kubernetes-logging/img/grafana-ingress nginx.png)  
+
+
+ - 
 
 ## PR checklist:
  - [*] Выставлен label с темой домашнего задания
- 

@@ -1,0 +1,89 @@
+prometheus:
+  prometheusSpec:
+    tolerations:
+    - key: node-role
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+
+    nodeSelector:
+      yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.158.160.23.111.nip.io
+    paths:
+      - /
+
+prometheusOperator:
+  tolerations:
+    - key: node-role
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+  nodeSelector:
+    yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+
+prometheus-node-exporter:
+  tolerations:
+    - key: node-role
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+  nodeSelector:
+    yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+
+kube-state-metrics:
+  tolerations:
+    - key: node-role
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+  nodeSelector:
+    yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+
+alertmanager:
+  alertmanagerSpec:
+    tolerations:
+      - key: node-role
+        operator: Equal
+        value: infra
+        effect: NoSchedule
+    nodeSelector:
+      yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - alertmanager.158.160.23.111.nip.io
+    paths:
+      - /
+
+grafana:
+  tolerations:
+    - key: node-role
+      operator: Equal
+      value: infra
+      effect: NoSchedule
+  nodeSelector:
+    yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+  enabled: true
+  defaultDashboardsEnabled: true
+  adminPassword: password
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.158.160.23.111.nip.io
+    path: /
+    additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki:3100
+      jsonData:
+        maxLines: 1000

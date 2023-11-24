@@ -1,0 +1,30 @@
+image: kibana
+imageTag: 8.5.1
+
+tolerations:
+  - key: node-role
+    operator: Equal
+    value: infra
+    effect: NoSchedule
+
+nodeSelector:
+  yandex.cloud/node-group-id: cat8mjvjtn6tobi7g0hk
+
+ingress:
+  enabled: true
+  className: "nginx"
+  pathtype: ImplementationSpecific
+  annotations: {}
+#    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: kibana.158.160.23.111.nip.io
+      paths:
+        - path: /
+#  tls: []
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"

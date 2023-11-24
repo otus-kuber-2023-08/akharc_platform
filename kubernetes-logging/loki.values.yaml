@@ -1,0 +1,4 @@
+---
+promtail:
+  tolerations:
+    - operator: "Exists"

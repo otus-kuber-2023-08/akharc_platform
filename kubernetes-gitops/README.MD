@@ -1,19 +1,5 @@
 /--------------------------------------------------------------
 # akharc_platform
-eval `ssh-agent -s`
-ssh-add ~/.ssh/akha
-git clone https://github.com/GoogleCloudPlatform/microservices-demo
-cd microservices-demo
-git remote add gitlab git@gitlab.com:akha-otus/microservices-demo.git
-git remote remove origin
-git push -uf gitlab main
-
-$ git commit -am "test git tags"
-$ git tag test-tag
-$ git push --tags origin master
-
-/--------------------------------------------------------------
-# akharc_platform
 akharc Platform repository
 # Выполнено ДЗ №10
 

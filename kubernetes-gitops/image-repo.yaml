@@ -1,0 +1,101 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: adservice
+  namespace: flux-system
+spec:
+  image: akha/adservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: cartservice
+  namespace: flux-system
+spec:
+  image: akha/cartservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: checkoutservice
+  namespace: flux-system
+spec:
+  image: akha/checkoutservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: currencyservice
+  namespace: flux-system
+spec:
+  image: akha/currencyservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: emailservice
+  namespace: flux-system
+spec:
+  image: akha/emailservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: loadgenerator
+  namespace: flux-system
+spec:
+  image: akha/loadgenerator
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: paymentservice
+  namespace: flux-system
+spec:
+  image: akha/paymentservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: productcatalogservice
+  namespace: flux-system
+spec:
+  image: akha/productcatalogservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: recommendationservice
+  namespace: flux-system
+spec:
+  image: akha/recommendationservice
+  interval: 1m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: shippingservice
+  namespace: flux-system
+spec:
+  image: akha/shippingservice
+  interval: 1m
+  provider: generic
+...
